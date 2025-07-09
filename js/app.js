@@ -32,10 +32,11 @@ function init() {
     let board = ['', '', '', '', '', '', '', '', ''];
     let turn = 'X'
     let winner = false
-    let tie = true
+    let tie = false
 
 
     /*------------------------ Cached Element References ------------------------*/
+    const boardEl = document.querySelector('.board');
     const squareEls = document.querySelectorAll('.sqr');
     const messageEl = document.querySelector('#message');
     const resetBtnEl = document.querySelector('#reset');
@@ -54,7 +55,7 @@ function init() {
             sqr.textContent = board[index];
         });
 
-        console.log(board)
+        // console.log(board)
 
     }
 
@@ -70,10 +71,12 @@ function init() {
 
     function handleClick(event) {
 
+        if (!event.target.classList.contains('sqr')) return;
+        
         const squareIndex = event.target.id
         if (board[squareIndex] !== '' || winner) return;
         
-        console.log(`sqr ${squareIndex}`)
+        // console.log(`sqr ${squareIndex}`)
 
         placePiece(squareIndex);
         checkForWinner();
@@ -91,35 +94,39 @@ function init() {
         for (let combo of winningCombos) {
             const [a, b, c] = combo;
             if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-                winner = true;
-                return;
+
+                return winner = true;
             }
         }
     }
 
     function checkForTie() {
-        tie = board.every(cell => cell !== '');
+        tie = board.every((cell) => cell !== '');
+        // console.log(tie)
     }
 
     function switchPlayerTurn() {
         if (!winner) {
             turn = turn === 'X' ? 'O' : 'X';
+        }else{
+            return;
         }
     }
 
-    function resetGame() {
-        board = ['', '', '', '', '', '', '', '', ''];
-        turn = 'X';
-        winner = false;
-        tie = false;
-        render();
-    }
+    // function resetGame() {
+    //     board = ['', '', '', '', '', '', '', '', ''];
+    //     turn = 'X';
+    //     winner = false;
+    //     tie = false;
+    //     render();
+    // }
 
     /*----------------------------- Event Listeners -----------------------------*/
-    squareEls.forEach(sqr => {
-        sqr.addEventListener('click', handleClick);
-    });
-    resetBtnEl.addEventListener('click', resetGame);
+    // squareEls.forEach(sqr => {
+    //     sqr.addEventListener('click', handleClick);
+    // });
+    boardEl.addEventListener('click', handleClick);
+    resetBtnEl.addEventListener('click', init);
 
     render()
 
